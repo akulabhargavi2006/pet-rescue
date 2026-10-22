@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Pet Rescue — A platform to rescue homeless and abandoned pets from roads and connect them with loving adoptive families. Report, Rescue, Adopt.">
+  <meta name="keywords"
+    content="pet rescue, pet adoption, adopt a pet, rescue dog, rescue cat, animal welfare, homeless pets">
+  <meta name="author" content="Pet Rescue Team">
+  <title>Pet Rescue — Give a Homeless Pet a Second Chance</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Favicon: paw emoji as SVG -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+</head>
+
+<body>
+
+  <!-- ======================== TOAST CONTAINER ======================== -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ======================== NAVIGATION ======================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-logo" onclick="navigateTo('home-view')">
+        <span class="paw-icon">🐾</span>
+        <span class="nav-logo-text">Pet Rescue</span>
+      </div>
+      <div class="nav-links" id="nav-links">
+        <a href="#" onclick="navigateTo('project-view')" class="active">Project Details</a>
+        <a href="#" onclick="navigateTo('home-view')">Home</a>
+        <a href="#" onclick="navigateTo('rescue-view')">Rescue a Pet</a>
+        <a href="#" onclick="navigateTo('pets-view')">Available Pets</a>
+        <a href="#" onclick="navigateTo('how-view')">How It Works</a>
+        <a href="#" onclick="navigateTo('about-view')">About Us</a>
+        <a href="#" onclick="navigateTo('contact-view')">Contact</a>
+        <a href="#" onclick="openAdmin()" class="nav-admin-link">🔐 Admin</a>
+      </div>
+      <div class="nav-toggle" id="nav-toggle">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================================================================
+       HOME PAGE
+       ================================================================ -->
+  <div id="home-view" class="page-view hidden">
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <div class="hero-bg-image" style="background-image: url('images/hero_bg.jpg');"></div>
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-badge">🌟 Saving Lives, One Paw at a Time</div>
+          <h1 class="hero-title">
+            Give a Homeless Pet a <span>Second Chance</span> at Life
+          </h1>
+          <p class="hero-subtitle">
+            We connect people who find abandoned or homeless pets with loving families ready to adopt. Every pet
+            deserves a home.
+          </p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary btn-lg" onclick="navigateTo('rescue-view')">
+              📋 Report a Rescued Pet
+            </button>
+            <button class="btn btn-hero-outline btn-lg" onclick="navigateTo('pets-view')">
+              🐶 Browse Adoptable Pets
+            </button>
+          </div>
+          <div class="hero-stats-row">
+            <div class="hero-stat-card">
+              <div class="stat-number" id="hero-stat-rescued">0</div>
+              <div class="stat-label">Rescued</div>
+            </div>
+            <div class="hero-stat-card">
+              <div class="stat-number" id="hero-stat-adopted">0</div>
+              <div class="stat-label">Adopted</div>
+            </div>
+            <div class="hero-stat-card">
+              <div class="stat-number" id="hero-stat-available">0</div>
+              <div class="stat-label">Available</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works (brief) -->
+    <section class="how-it-works page-section" id="how-it-works-home">
+      <div class="container">
+        <h2 class="section-title reveal">How It Works</h2>
+        <p class="section-subtitle reveal">Three simple steps to save a life and find a furry friend.</p>
+        <div class="steps-grid">
+          <div class="step-card reveal">
+            <div class="step-icon">
+              📸
+              <span class="step-number">1</span>
+            </div>
+            <h3>Find &amp; Report</h3>
+            <p>Found a homeless or abandoned pet on the road? Upload its photo and details through our simple rescue
+              form.</p>
+          </div>
+          <div class="step-card reveal">
+            <div class="step-icon">
+              ✅
+              <span class="step-number">2</span>
+            </div>
+            <h3>Rescue &amp; Verify</h3>
+            <p>Our team reviews the submitted report, verifies the information, and adds approved pets to the adoption
+              listing.</p>
+          </div>
+          <div class="step-card reveal">
+            <div class="step-icon">
+              ❤️
+              <span class="step-number">3</span>
+            </div>
+            <h3>Adopt &amp; Love</h3>
+            <p>Browse available pets, find your perfect match, and submit an adoption request. Give them a forever home!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Preview of Available Pets -->
+    <section class="page-section section-alt">
+      <div class="container">
+        <h2 class="section-title reveal">Pets Waiting For You</h2>
+        <p class="section-subtitle reveal">These adorable pets are looking for a loving home. Could you be the one?</p>
+        <div class="pets-grid" id="home-pets-preview"></div>
+        <div style="text-align:center; margin-top: var(--space-2xl);">
+          <button class="btn btn-primary btn-lg" onclick="navigateTo('pets-view')">
+            View All Available Pets →
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================================================================
+       RESCUE / REPORT A PET
+       ================================================================ -->
+  <div id="rescue-view" class="page-view hidden">
+    <!-- Page Hero Banner -->
+    <div class="page-hero">
+      <div class="page-hero-bg"></div>
+      <div class="container">
+        <div class="page-hero-content">
+          <span class="page-hero-badge">📋 Rescue Form</span>
+          <h1>Report a Rescued Pet</h1>
+          <p>Found a homeless, abandoned, or injured pet? Submit a rescue report and help us save more lives.</p>
+        </div>
+      </div>
+    </div>
+    <section class="form-section">
+      <div class="container">
+        <div class="hform-wrapper">
+          <!-- Photo Upload Row -->
+          <div class="hform-section">
+            <div class="hform-section-header">
+              <div class="hform-icon">📷</div>
+              <div>
+                <h3>Pet Photo</h3>
+                <p>Upload a clear photo to help potential adopters identify the pet.</p>
+              </div>
+            </div>
+            <div class="photo-upload" id="photo-upload-area">
+              <input type="file" id="pet-photo-input" accept="image/*">
+              <div id="photo-placeholder">
+                <div class="photo-upload-icon">📸</div>
+                <p class="photo-upload-text">
+                  <span>Click or drag</span> to upload a photo<br>
+                  <small>JPG, PNG — Max 5 MB</small>
+                </p>
+              </div>
+              <img id="photo-preview" class="photo-preview hidden" alt="Preview">
+            </div>
+          </div>
+
+          <form id="rescue-form">
+            <!-- Basic Info Section -->
+            <div class="hform-section">
+              <div class="hform-section-header">
+                <div class="hform-icon hform-icon-green">🐾</div>
+                <div>
+                  <h3>Basic Information</h3>
+                  <p>Tell us about the animal you found.</p>
+                </div>
+              </div>
+              <div class="hform-row">
+                <div class="form-group">
+                  <label>Animal Type <span class="required">*</span></label>
+                  <select id="rescue-animal-type">
+                    <option value="">— Select —</option>
+                    <option value="Dog">🐕 Dog</option>
+                    <option value="Cat">🐈 Cat</option>
+                  </select>
+                  <span class="form-error" id="rescue-animal-type-error"></span>
+                </div>
+                <div class="form-group">
+                  <label>Breed <small>(optional)</small></label>
+                  <input type="text" id="rescue-breed" placeholder="e.g. Labrador, Siamese">
+                </div>
+                <div class="form-group">
+                  <label>Pet Condition <span class="required">*</span></label>
+                  <select id="rescue-condition">
+                    <option value="">— Select —</option>
+                    <option value="Healthy">✅ Healthy</option>
+                    <option value="Injured">🩹 Injured</option>
+                    <option value="Weak">⚠️ Weak</option>
+                    <option value="Unknown">❓ Unknown</option>
+                  </select>
+                  <span class="form-error" id="rescue-condition-error"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Location & Details Section -->
+            <div class="hform-section">
+              <div class="hform-section-header">
+                <div class="hform-icon hform-icon-purple">📍</div>
+                <div>
+                  <h3>Location &amp; Details</h3>
+                  <p>Where and when did you find this pet?</p>
+                </div>
+              </div>
+              <div class="hform-row">
+                <div class="form-group">
+                  <label>Location Found <span class="required">*</span></label>
+                  <input type="text" id="rescue-location" placeholder="e.g. MG Road, Bangalore">
+                  <span class="form-error" id="rescue-location-error"></span>
+                </div>
+                <div class="form-group">
+                  <label>Date Found <span class="required">*</span></label>
+                  <input type="date" id="rescue-date">
+                  <span class="form-error" id="rescue-date-error"></span>
+                </div>
+              </div>
+              <div class="hform-row" style="margin-top:14px;">
+                <div class="form-group" style="flex:1;">
+                  <label>Description <span class="required">*</span></label>
+                  <textarea id="rescue-description" rows="3"
+                    placeholder="Describe the pet's appearance, behaviour, and any other important details..."></textarea>
+                  <span class="form-error" id="rescue-description-error"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Details Section -->
+            <div class="hform-section">
+              <div class="hform-section-header">
+                <div class="hform-icon hform-icon-dark">👤</div>
+                <div>
+                  <h3>Your Contact Details</h3>
+                  <p>So our team can reach you for verification.</p>
+                </div>
+              </div>
+              <div class="hform-row">
+                <div class="form-group">
+                  <label>Your Name <span class="required">*</span></label>
+                  <input type="text" id="rescue-finder-name" placeholder="Your full name">
+                  <span class="form-error" id="rescue-finder-name-error"></span>
+                </div>
+                <div class="form-group">
+                  <label>Contact Number <span class="required">*</span></label>
+                  <input type="tel" id="rescue-finder-phone" placeholder="Your phone number">
+                  <span class="form-error" id="rescue-finder-phone-error"></span>
+                </div>
+                <div class="form-group">
+                  <label>Email <span class="required">*</span></label>
+                  <input type="email" id="rescue-finder-email" placeholder="your@email.com">
+                  <span class="form-error" id="rescue-finder-email-error"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="hform-submit">
+              <div class="hform-submit-info">
+                <span>🛡️</span>
+                <p>Your report will be reviewed by our team within 24 hours. We'll contact you if we need additional
+                  information.</p>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg">
+                🐾 Submit Rescue Report
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================================================================
+       AVAILABLE PETS FOR ADOPTION
+       ================================================================ -->
+  <div id="pets-view" class="page-view hidden">
+    <!-- Page Hero Banner -->
+    <div class="page-hero page-hero-accent">
+      <div class="page-hero-bg"></div>
+      <div class="container">
+        <div class="page-hero-content">
+          <span class="page-hero-badge">🐶 Adoption Center</span>
+          <h1>Available Pets for Adoption</h1>
+          <p>Browse our rescue pets waiting for their forever home. Use the filters to find your perfect companion.</p>
+        </div>
+      </div>
+    </div>
+    <section class="pets-section">
+      <div class="container">
+        <!-- Filters -->
+        <div class="filters-bar">
+          <div class="filter-group">
+            <label>Search</label>
+            <input type="text" id="filter-search" placeholder="Search by name, breed, location...">
+          </div>
+          <div class="filter-group">
+            <label>Animal Type</label>
+            <select id="filter-type">
+              <option value="">All Types</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Gender</label>
+            <select id="filter-gender">
+              <option value="">All</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Condition</label>
+            <select id="filter-condition">
+              <option value="">All</option>
+              <option value="Healthy">Healthy</option>
+              <option value="Injured">Injured</option>
+              <option value="Weak">Weak</option>
+              <option value="Unknown">Unknown</option>
+            </select>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-secondary btn-sm" onclick="clearFilters()">Clear</button>
+          </div>
+        </div>
+
+        <!-- Pet Cards Grid -->
+        <div class="pets-grid" id="pets-grid"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================================================================
+       HOW IT WORKS (Full Page)
+       ================================================================ -->
+  <div id="how-view" class="page-view hidden">
+    <!-- Page Hero Banner -->
+    <div class="page-hero page-hero-purple">
+      <div class="page-hero-bg"></div>
+      <div class="container">
+        <div class="page-hero-content">
+          <span class="page-hero-badge">✨ Our Process</span>
+          <h1>How Pet Rescue Works</h1>
+          <p>Our mission is simple — connect rescued animals with loving homes through a transparent, easy-to-use
+            platform.</p>
+        </div>
+      </div>
+    </div>
+    <section class="how-it-works page-section">
+      <div class="container">
+        <div class="steps-grid">
+          <div class="step-card reveal">
+            <div class="step-icon">
+              📸
+              <span class="step-number">1</span>
+            </div>
+            <h3>Find &amp; Report</h3>
+            <p>Found a homeless or abandoned pet on the road? Upload its photo and details through our simple rescue
+              form. Every report helps save a life.</p>
+          </div>
+          <div class="step-card reveal">
+            <div class="step-icon">
+              ✅
+              <span class="step-number">2</span>
+            </div>
+            <h3>Rescue &amp; Verify</h3>
+            <p>Our team reviews the submitted report, verifies the information and pet condition, and adds approved pets
+              to the adoption listing for potential adopters to browse.</p>
+          </div>
+          <div class="step-card reveal">
+            <div class="step-icon">
+              ❤️
+              <span class="step-number">3</span>
+            </div>
+            <h3>Adopt &amp; Love</h3>
+            <p>Browse available pets, find your perfect match, and submit an adoption request. Once approved, you can
+              welcome your new furry friend home!</p>
+          </div>
+        </div>
+
+        <div class="how-cta-section">
+          <p class="how-cta-text">
+            Every pet deserves a safe and loving home. Whether you find a pet or want to adopt one, you can make a real
+            difference through our platform.
+          </p>
+          <div class="how-cta-buttons">
+            <button class="btn btn-primary btn-lg" onclick="navigateTo('rescue-view')">📋 Report a Pet</button>
+            <button class="btn btn-secondary btn-lg" onclick="navigateTo('pets-view')">🐶 Browse Pets</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================================================================
+       ABOUT US
+       ================================================================ -->
+  <div id="about-view" class="page-view hidden">
+    <!-- Page Hero Banner -->
+    <div class="page-hero page-hero-dark">
+      <div class="page-hero-bg"></div>
+      <div class="container">
+        <div class="page-hero-content">
+          <span class="page-hero-badge">💚 Who We Are</span>
+          <h1>About Pet Rescue</h1>
+          <p>We're on a mission to save every homeless pet and connect them with loving families.</p>
+        </div>
+      </div>
+    </div>
+    <section class="about-section">
+      <div class="container">
+        <div class="about-content">
+          <div class="about-text">
+            <h2 class="reveal">Our Mission: <br>Every Pet Deserves <span style="color: var(--brand);">Love</span></h2>
+            <p class="reveal">
+              <strong>Pet Rescue</strong> is a platform created to connect rescued animals with people who are willing
+              to provide them with a safe and loving home. We believe that every animal deserves a second chance at
+              happiness.
+            </p>
+            <p class="reveal">
+              Every day, countless pets are found abandoned, injured, or homeless on our streets. Our platform bridges
+              the gap between those who find these animals and those who want to give them a forever home.
+            </p>
+
+            <div class="about-goals reveal">
+              <div class="goal-item">
+                <span class="goal-icon">🏥</span>
+                Help rescued animals
+              </div>
+              <div class="goal-item">
+                <span class="goal-icon">🏡</span>
+                Increase pet adoption
+              </div>
+              <div class="goal-item">
+                <span class="goal-icon">🤝</span>
+                Connect rescuers with adopters
+              </div>
+              <div class="goal-item">
+                <span class="goal-icon">📉</span>
+                Reduce homeless pets
+              </div>
+              <div class="goal-item">
+                <span class="goal-icon">📢</span>
+                Create awareness about animal welfare
+              </div>
+              <div class="goal-item">
+                <span class="goal-icon">💚</span>
+                Build a compassionate community
+              </div>
+            </div>
+          </div>
+
+          <div class="about-visual reveal">
+            <div class="about-visual-card">
+              <h3>🐾</h3>
+              <p>Together, we can make a difference in the lives of homeless animals.</p>
+              <div class="about-counters">
+                <div class="counter-item">
+                  <div class="counter-value">6</div>
+                  <div class="counter-label">Pets Rescued</div>
+                </div>
+                <div class="counter-item">
+                  <div class="counter-value">4</div>
+                  <div class="counter-label">Happy Adoptions</div>
+                </div>
+                <div class="counter-item">
+                  <div class="counter-value">50+</div>
+                  <div class="counter-label">Volunteers</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================================================================
+       CONTACT
+       ================================================================ -->
+  <div id="contact-view" class="page-view hidden">
+    <!-- Page Hero Banner -->
+    <div class="page-hero">
+      <div class="page-hero-bg"></div>
+      <div class="container">
+        <div class="page-hero-content">
+          <span class="page-hero-badge">💬 Reach Out</span>
+          <h1>Get In Touch</h1>
+          <p>Have questions, suggestions, or want to volunteer? We'd love to hear from you.</p>
+        </div>
+      </div>
+    </div>
+    <section class="contact-section">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-info">
+            <h2>Contact Information</h2>
+            <p>Reach out to us through any of the following channels. We're here to help!</p>
+
+            <div class="contact-items">
+              <div class="contact-item">
+                <div class="contact-item-icon">📧</div>
+                <div class="contact-item-text">
+                  <h4>Email</h4>
+                  <p>support@petrescue.org</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-item-icon">📞</div>
+                <div class="contact-item-text">
+                  <h4>Phone</h4>
+                  <p>+91 98765 43210</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-item-icon">📍</div>
+                <div class="contact-item-text">
+                  <h4>Location</h4>
+                  <p>123 Animal Welfare Lane, Bangalore, India</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-item-icon">🕐</div>
+                <div class="contact-item-text">
+                  <h4>Working Hours</h4>
+                  <p>Mon–Sat: 9:00 AM – 6:00 PM</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="social-links">
+              <div class="social-link" title="Facebook">📘</div>
+              <div class="social-link" title="Twitter">🐦</div>
+              <div class="social-link" title="Instagram">📷</div>
+              <div class="social-link" title="YouTube">▶️</div>
+            </div>
+          </div>
+
+          <div class="contact-form-wrapper">
+            <h3>Send Us a Message</h3>
+            <form id="contact-form" class="contact-form">
+              <div class="form-group">
+                <label>Your Name <span class="required">*</span></label>
+                <input type="text" id="contact-name" placeholder="Your name">
+                <span class="form-error" id="contact-name-error"></span>
+              </div>
+              <div class="form-group">
+                <label>Your Email <span class="required">*</span></label>
+                <input type="email" id="contact-email" placeholder="your@email.com">
+                <span class="form-error" id="contact-email-error"></span>
+              </div>
+              <div class="form-group">
+                <label>Message <span class="required">*</span></label>
+                <textarea id="contact-message" rows="5" placeholder="Write your message here..."></textarea>
+                <span class="form-error" id="contact-message-error"></span>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;">
+                ✉️ Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================================================================
+       ADMIN DASHBOARD
+       ================================================================ -->
+  <div id="admin-view" class="page-view hidden">
+    <section class="admin-section">
+      <div class="container">
+        <!-- Header with stats -->
+        <div class="admin-header">
+          <h1>🛡️ Admin Dashboard</h1>
+          <div class="admin-stats">
+            <div class="admin-stat-card">
+              <div class="stat-value" id="stat-pending">0</div>
+              <div class="stat-title">Pending</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="stat-value" id="stat-available">0</div>
+              <div class="stat-title">Available</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="stat-value" id="stat-adopted">0</div>
+              <div class="stat-title">Adopted</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="stat-value" id="stat-requests">0</div>
+              <div class="stat-title">Requests</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-panel="panel-pending">
+            📋 Pending Reports <span class="tab-count" id="tab-count-pending">0</span>
+          </button>
+          <button class="admin-tab" data-panel="panel-adoptions">
+            ❤️ Adoption Requests <span class="tab-count" id="tab-count-adoptions">0</span>
+          </button>
+        </div>
+
+        <!-- Pending Reports Panel -->
+        <div class="admin-panel active" id="panel-pending">
+          <div id="pending-reports-list"></div>
+        </div>
+
+        <!-- Adoption Requests Panel -->
+        <div class="admin-panel" id="panel-adoptions">
+          <div id="adoption-requests-list"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================================================================
+       PROJECT DETAILS
+       ================================================================ -->
+  <div id="project-view" class="page-view">
+    <!-- Page Hero Banner -->
+    <div class="page-hero page-hero-purple">
+      <div class="page-hero-bg"></div>
+      <div class="container">
+        <div class="page-hero-content">
+          <span class="page-hero-badge">🎓 Academic Project</span>
+          <h1>Project Details</h1>
+          <p>Mini Project by Team-4, CSE AI-ML, Raghu Engineering College, Visakhapatnam.</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="project-details-section">
+      <div class="container">
+        <div class="pd-wrapper">
+
+          <!-- ===== COLLEGE HEADER ===== -->
+          <header class="pd-college-header" id="pd-college-header">
+            <img src="images/rec_logo.jpg" alt="Raghu Engineering College Logo" class="pd-college-logo">
+            <h2 class="pd-college-name">Raghu Engineering College (A)</h2>
+            <p class="pd-college-location">Visakhapatnam</p>
+            <span class="pd-college-degree">Bachelor of Technology</span>
+          </header>
+
+          <!-- ===== PROJECT TITLE CARD ===== -->
+          <div class="pd-title-card">
+            <div class="pd-badge">🚀 Mini Project</div>
+            <h2 class="pd-title">PET RESCUE WEBSITE</h2>
+            <p class="pd-subtitle">A User-Friendly Web Application for Pet Rescue, Adoption & Care</p>
+            <div class="pd-divider"></div>
+            <div class="pd-meta">
+              <span class="pd-meta-chip">👥 Team-4</span>
+              <span class="pd-meta-chip">🎓 CSE AI-ML</span>
+              <span class="pd-meta-chip">📅 2025-26</span>
+            </div>
+          </div>
+
+          <!-- ===== FACULTY & HOD INFO CARDS ===== -->
+          <div class="pd-info-grid">
+            <div class="pd-info-card pd-card-hod">
+              <div class="pd-info-icon">🏛️</div>
+              <div class="pd-info-label">Head of Department</div>
+              <div class="pd-info-name">Dr. G. Sridevi</div>
+              <div class="pd-info-role">CSE AI-ML Department</div>
+            </div>
+            <div class="pd-info-card pd-card-guide">
+              <div class="pd-info-icon">📘</div>
+              <div class="pd-info-label">Project Guide</div>
+              <div class="pd-info-name">Mr. K. Sandeep</div>
+              <div class="pd-info-role">Assistant Professor</div>
+            </div>
+            <div class="pd-info-card pd-card-team">
+              <div class="pd-info-icon">🤝</div>
+              <div class="pd-info-label">Team</div>
+              <div class="pd-info-name">Team-4</div>
+              <div class="pd-info-role">5 Members • CSE AI-ML</div>
+            </div>
+          </div>
+
+          <!-- ===== TEAM MEMBERS ===== -->
+          <div class="pd-team-section">
+            <div class="pd-team-header">
+              <div class="pd-team-icon">👩‍💻</div>
+              <h2 class="pd-team-title">Team Members</h2>
+            </div>
+            <div class="pd-team-list">
+              <div class="pd-team-member">
+                <div class="pd-team-avatar pd-av-1">CS</div>
+                <div class="pd-team-details">
+                  <div class="pd-member-name">Ch. Sivaji</div>
+                  <div class="pd-member-id">24981A424L</div>
+                </div>
+              </div>
+              <div class="pd-team-member">
+                <div class="pd-team-avatar pd-av-2">JK</div>
+                <div class="pd-team-details">
+                  <div class="pd-member-name">J. Kishore</div>
+                  <div class="pd-member-id">24981A425Y</div>
+                </div>
+              </div>
+              <div class="pd-team-member">
+                <div class="pd-team-avatar pd-av-3">AS</div>
+                <div class="pd-team-details">
+                  <div class="pd-member-name">A. Sindhu</div>
+                  <div class="pd-member-id">24981A4261</div>
+                </div>
+              </div>
+              <div class="pd-team-member">
+                <div class="pd-team-avatar pd-av-4">AB</div>
+                <div class="pd-team-details">
+                  <div class="pd-member-name">A. Bhargavi</div>
+                  <div class="pd-member-id">24981A4263</div>
+                </div>
+              </div>
+              <div class="pd-team-member">
+                <div class="pd-team-avatar pd-av-5">EB</div>
+                <div class="pd-team-details">
+                  <div class="pd-member-name">E. Bhoomythri</div>
+                  <div class="pd-member-id">24981A4278</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== ACTION BUTTONS ===== -->
+          <div class="pd-action-section">
+            <button class="pd-action-btn pd-btn-abstract" onclick="openAbstract()">
+              <span class="pd-btn-icon">📄</span>
+              Abstract
+            </button>
+            <button class="pd-action-btn pd-btn-website" onclick="navigateTo('home-view')">
+              <span class="pd-btn-icon">🌐</span>
+              Go to Website
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== ABSTRACT MODAL ===== -->
+  <div class="modal-overlay" id="abstract-modal">
+    <div class="modal-content-box">
+      <div class="modal-hdr">
+        <div class="modal-hdr-left">
+          <div class="modal-hdr-icon">📄</div>
+          <h3 class="modal-hdr-title">Project Abstract</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeAbstract()" title="Close">&times;</button>
+      </div>
+      <div class="modal-bdy">
+        <div class="abstract-text">
+          <p>
+            The <strong>Pet Rescue Website</strong> is a user-friendly and interactive web application developed to help
+            people rescue, report, adopt, and provide care for abandoned, lost, injured, and homeless pets. In daily
+            life, many animals are found without food, shelter, medical help, or proper identification. People who find
+            such pets may not know whom to contact or how to arrange immediate help. This project provides a digital
+            platform that connects pet rescuers, adopters, volunteers, veterinary services, and animal welfare
+            organizations, helping pets receive timely care and a safe home.
+          </p>
+          <p>
+            The website allows users to register and log in, add the complete details of rescued or missing pets, upload
+            pet images, and view available pet information. Each pet record can include the pet type, breed, gender,
+            approximate age, colour, health condition, rescue location, date of rescue, vaccination status, and current
+            rescue status. This helps rescuers and adopters understand the needs of each pet clearly and take suitable
+            action.
+          </p>
+          <p>
+            Users can search for pets based on categories such as dogs, cats, puppies, kittens, and other animals. They
+            can also filter records by location, age, health condition, adoption availability, or emergency status. The
+            system organizes pet details in a simple way and provides an easy method for interested users to contact the
+            rescuer or adoption centre. Users can update a record after treatment, adoption, reunion with its owner, or
+            transfer to a shelter; the process and userway needs can also be removed whenever required.
+          </p>
+          <p>
+            The project is developed using HTML, CSS, and JavaScript. HTML is used to create the basic structure and
+            also fit of the webpages, while CSS provides an attractive, responsive, and user-friendly interface.
+            JavaScript is used to implement interactive functions such as pet registration, image uploading, searching,
+            filtering, form pet ownership and awareness and details. The website can be accessed through a computer or
+            mobile browser.
+          </p>
+          <p>
+            The primary objective of the Pet Rescue Website is to make pet rescue and adoption easier, more organized,
+            and more reliable. By maintaining digital records of rescued, missing, and adoptable pets, the system
+            reduces confusion and helps users respond faster to help a lost pet return to its owner, help an injured pet
+            receive medical attention, and help an abandoned pet find a responsible adopter. The project also promotes
+            responsible pet ownership and awareness about animal welfare.
+          </p>
+          <p>
+            In the future, the project can be enhanced by integrating database connectivity, secure user authentication,
+            GPS-based location tracking, emergency rescue notifications, online veterinary consultation, adoption
+            request management, volunteer registration, donation facilities, and automated reminders for vaccinations
+            and follow-up care. These features can make the system more useful and provide a complete digital solution
+            for pet rescue and welfare management.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <span class="paw-icon">🐾</span> <span class="nav-logo-text">Pet Rescue</span>
+          </div>
+          <p>Connecting rescued animals with loving homes. Every pet deserves a second chance at happiness.</p>
+        </div>
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <a href="#" onclick="navigateTo('home-view')">Home</a>
+          <a href="#" onclick="navigateTo('rescue-view')">Report a Pet</a>
+          <a href="#" onclick="navigateTo('pets-view')">Available Pets</a>
+          <a href="#" onclick="navigateTo('how-view')">How It Works</a>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <a href="#" onclick="navigateTo('about-view')">About Us</a>
+          <a href="#" onclick="navigateTo('contact-view')">Contact Us</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+        <div class="footer-column">
+          <h4>Contact</h4>
+          <a href="#">support@petrescue.org</a>
+          <a href="#">+91 98765 43210</a>
+          <a href="#">Bangalore, India</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Pet Rescue. Made with ❤️ for homeless animals.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================== SCRIPT ======================== -->
+  <script src="script.js"></script>
+
+  <!-- Home page pets preview (inline script to render after main script loads) -->
+  <script>
+    // Render up to 3 pets on the home page preview section
+    document.addEventListener('DOMContentLoaded', () => {
+      const previewGrid = document.getElementById('home-pets-preview');
+      if (!previewGrid) return;
+      const available = getAvailablePets().slice(0, 3);
+      if (available.length === 0) {
+        previewGrid.innerHTML = `
+          <div class="no-results" style="grid-column:1/-1;">
+            <div class="emoji">🐾</div>
+            <h3>No pets available yet</h3>
+            <p>Be the first to report a rescued pet!</p>
+          </div>
+        `;
+        return;
+      }
+      available.forEach((pet, i) => {
+        const card = document.createElement('div');
+        card.className = 'pet-card reveal';
+        card.style.animationDelay = `${i * 0.15}s`;
+        const condBadgeClass = 'badge-' + pet.condition.toLowerCase();
+        const typeEmoji = getAnimalEmoji(pet.animalType);
+        const photoSrc = pet.photo || getPlaceholderImage(pet.animalType);
+        card.innerHTML = `
+          <div class="pet-card-image">
+            <img src="${photoSrc}" alt="${pet.name}" loading="lazy">
+            <span class="pet-card-badge ${condBadgeClass}">${pet.condition}</span>
+            <span class="pet-card-type-badge">${typeEmoji}</span>
+          </div>
+          <div class="pet-card-body">
+            <h3 class="pet-card-name">${pet.name}</h3>
+            <div class="pet-card-meta">
+              <span class="pet-meta-tag">🐾 ${pet.animalType}</span>
+              <span class="pet-meta-tag">📍 ${shortenLocation(pet.location)}</span>
+              <span class="pet-meta-tag">${pet.gender === 'Male' ? '♂️' : '♀️'} ${pet.gender}</span>
+              <span class="pet-meta-tag">🎂 ${pet.age}</span>
+            </div>
+            <p class="pet-card-desc">${pet.description}</p>
+            <div class="pet-card-actions">
+              <button class="btn btn-secondary btn-sm" onclick="openPetDetail('${pet.id}')">View Details</button>
+              <button class="btn btn-primary btn-sm" onclick="openAdoptionForm('${pet.id}')">I Want to Adopt</button>
+            </div>
+          </div>
+        `;
+        previewGrid.appendChild(card);
+      });
+      // Re-init scroll reveal for these new elements
+      setTimeout(initScrollReveal, 100);
+    });
+  </script>
+</body>
+
+</html>
